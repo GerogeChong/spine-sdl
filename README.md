@@ -1,5 +1,7 @@
 # spine-sdl
 
+Note:spine-sdl currently only support opengles 1.x-based platform: eg, iOS , Android. However it's easy to be extended to opengl and opengles 2.
+
 The spine-sdl runtime provides functionality to load, manipulate and render Spine skeletal animation data using SDL2(>=2.0.6). spine-sdl is based on [spine-c](https://github.com/EsotericSoftware/spine-runtimes/tree/c6f31e6310833caa57da496db6bb04965d1e88c7/spine-c).
 
 # Licensing
@@ -27,7 +29,15 @@ spine-sdl does not yet support loading the binary format.
    
 # Usage 
 
-1. Include spine-sdl.h and required spine-c headers
+1. Include spine-sdl.h and required spine-c headers then Create SDL window and Renderer like this:
+```java 
+SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 1);
+SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
+SDL_SetHint( SDL_HINT_RENDER_DRIVER,"opengles");// easy to be extended to other drivers,Follow the "How to Extend" section below
+
+SDL_Window* gpWindow = SDL_CreateWindow("", 0, 0, width, height, SDL_WINDOW_OPENGL|SDL_WINDOW_RESIZABLE|SDL_WINDOW_ALLOW_HIGHDPI);
+SDL_Renderer* gpRenderer = SDL_CreateRenderer(gpWindow, -1, SDL_RENDERER_ACCELERATED );
+```
 2. Create Spine Atlas and SkeletonData like this:
 ```java 
 atlas=Atlas_createFromFile((char*)atlas_path.c_str(),0);//read atlas from file
@@ -61,6 +71,16 @@ while(running)
 Atlas_dispose(atlas);
 SkeletonData_dispose(skeletonData);
 ```
+# How to Extend 
 
-	
+Here are basic steps of how to extend to "opengl" and "opengles2":
+
+Step 1: Based on the current "SDL_RenderCopySpine" fuction in 'SDL_render_gles.c' implement a new one for target opengl platform (main function is to draw the spine GL_TRIANGLES Vertex (positions,colors,texture coordinates), for more details ,please read the VertexArray::draw() function);
+
+Step 2: Before create any SDL_Window and SDL_Renderer,setup Correct GL Version and Driver by:
+```java
+SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, MAJOR_VERSION);
+SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, MINOR_VERSION);
+SDL_SetHint( SDL_HINT_RENDER_DRIVER,"target_opengl_platform");
+```	
 	
