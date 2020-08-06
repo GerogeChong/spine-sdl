@@ -1399,6 +1399,10 @@ GL_RenderCopySpine(SDL_Renderer * renderer, SDL_Texture * texture,unsigned int m
     GL_TextureData *texturedata = (GL_TextureData *) texture->driverdata;
     
     GL_ActivateRenderer(renderer);
+	
+	if (GL_SetupCopy(renderer, texture) < 0) {
+        return -1;
+    }
     
     data->glEnable(GL_TEXTURE_2D);
     
