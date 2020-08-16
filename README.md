@@ -1,6 +1,6 @@
 # spine-sdl
 
-Note:spine-sdl currently only support opengles 1.x-based platform: eg, iOS , Android. However it's easy to be extended to opengl and opengles 2.
+Note:spine-sdl currently only support opengles 1.x-based platform: eg, iOS , Android. However it's easy to be extended to opengles 2.
 
 The spine-sdl runtime provides functionality to load, manipulate and render Spine skeletal animation data using SDL2(>=2.0.6). spine-sdl is based on [spine-c](https://github.com/EsotericSoftware/spine-runtimes/tree/c6f31e6310833caa57da496db6bb04965d1e88c7/spine-c).
 
@@ -17,13 +17,17 @@ spine-sdl does not yet support loading the binary format.
 
 # Setup
 
+Note: You will have to compile a custom version of SDL2 to use this.
+
 1. Create a new [SDL2](https://github.com/SDL-mirror/SDL) project and integrate [spine-c](https://github.com/EsotericSoftware/spine-runtimes/tree/c6f31e6310833caa57da496db6bb04965d1e88c7/spine-c). 
 
 2. Add spine-sdl/spine-sdl.h and spine-sdl/spine-sdl.cpp into your own src directory as part of your source code.
 
 3. (a) Copy SDL/src/include/SDL_opengles.h and SDL/src/include/SDL_render.h,then paste them to your projects' SDL src/include directory. (which replaced the same named files)
    
-   (b) Just like we did in (a) , copy all the files in SDL/src/render (SDL_render.c,SDL_sysrender.h,and files in "opengles" directory) and then replace the same named files in your projects' SDL src/render direcotry with them.
+   (b) Just like we did in (a) , copy all the files in SDL/src/render (SDL_render.c,SDL_sysrender.h,and files in "opengles" and "opengl" directory) and then replace the same named files in your projects' SDL src/render direcotry with them.
+   
+   (c) Just like (b), copy all the files in SDL/src/dynapi to your projects SDL src/dynapi directory
    
    Note:Currently spine-sdl is based on SDL 2.0.8, if your SDL version is higher,you may manually migriate these same named files mentioned above.
    
@@ -75,7 +79,7 @@ SkeletonData_dispose(skeletonData);
 
 Here are basic steps of how to extend to "opengl" and "opengles2":
 
-Step 1: Based on the current "SDL_RenderCopySpine" fuction in 'SDL_render_gles.c' implement a new one for target opengl platform (main function is to draw the spine GL_TRIANGLES Vertex (positions,colors,texture coordinates), for more details ,please read the VertexArray::draw() function);
+Step 1: Based on the current "SDL_RenderCopySpine" fuction in 'SDL_render_gles.c' and 'SDL_render_gl.c' implement a new one for target opengl platform (main function is to draw the spine GL_TRIANGLES Vertex (positions,colors,texture coordinates), for more details ,please read the VertexArray::draw() function);
 
 Step 2: Before create any SDL_Window and SDL_Renderer,setup Correct GL Version and Driver by:
 ```java
